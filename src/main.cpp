@@ -1,2 +1,7 @@
+#include <iostream>
+#include <ostream>
+
 #include "Task.hpp"
-#include "Task.cpp"
+int main() {
+    std::cout << "Hello World!" << std::endl;
+}
