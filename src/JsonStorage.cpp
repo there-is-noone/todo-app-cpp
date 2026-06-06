@@ -22,6 +22,7 @@ std::vector<Task> JsonStorage::load() {
         tasks.emplace_back(Task(
             i["id"],
             i["description"],
+            i["priority"],
             i["done"]));
     }
     return tasks;
@@ -34,6 +35,7 @@ void JsonStorage::save(const std::vector<Task>& Tasks) {
         j.push_back({
             {"id",Task.getId()},
             {"description", Task.getDescription()},
+                {"priority"}, Task.getPriority(),
             {"done",Task.isDone()}
         });
     }

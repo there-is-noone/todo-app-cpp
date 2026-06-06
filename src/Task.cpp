@@ -1,6 +1,8 @@
 #include "Task.hpp"
 
-Task::Task(int id, const std::string& description, bool done): id_(id), description_(description),done_(done) {}
+Task::Task(int id, const std::string& description,Priority p, bool done): id_(id), description_(description),done_(done) {}
+
+
 
 void Task::setDone(bool is_done) {
     done_=is_done;
@@ -20,4 +22,7 @@ std::string Task::getDescription()  const{
 }
 bool Task::isDone() const {
     return done_;
+}
+Task::Priority Task::getPriority() const {
+    return priority_;
 }

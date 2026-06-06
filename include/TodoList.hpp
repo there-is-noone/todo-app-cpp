@@ -4,18 +4,23 @@
 #include "Storage.hpp"
 class TodoList{
 public:
-    TodoList();
-    TodoList(const TodoList& todoList)=default;
+    TodoList(Storage& storage): storage(storage), nextId(1) {
+        TaskList=this->storage.load();
+        for (const auto& task : TaskList) {
+            if (task.getId() >= nextId) {
+                nextId = task.getId() + 1;
+            }
+        }
+    }
+    TodoList(TodoList& todoList)=default;
     TodoList(TodoList&& todoList)=default;
     ~TodoList()=default;
     Task* findById(int id);
     void markTaskDone(int Id);
-    void addTask(const std::string& description);
-    void removeTask(Task* task);
+    void addTask(const std::string& description, Task::Priority priority);
+     void removeTask(Task* task);
     void removeTask(int Id);
     std::string showAllTasks();
-    std::vector<Task> loadTasks();
-    void SaveTasks(const std::vector<Task>& tasks);
 
     int getNextId();
 

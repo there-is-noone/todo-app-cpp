@@ -12,25 +12,27 @@ Task* TodoList::findById(int Id) {
 }
 void TodoList::markTaskDone(int Id) {
     Task* task= findById(Id);
-    if (!task) {
-        return;
-    }
+
     task->setDone();
+    storage.save(TaskList);
 }
-void TodoList::addTask(const std::string& description){
-    Task newTask(getNextId(), description, false);
+void TodoList::addTask(const std::string& description,Task::Priority priority){
+    Task newTask(getNextId(), description,priority=Task::Priority::LOW, false);
     TaskList.push_back(newTask);
+    storage.save(TaskList);
 }
 void TodoList::removeTask(Task* task) {
     if (!task) {
         return;
     }
     removeTask(task->getId());
+    storage.save(TaskList);
 }
 void TodoList::removeTask(int Id) {
     for (auto it=TaskList.begin(); it!=TaskList.end(); ++it) {
         if (it->getId() == Id) {
             TaskList.erase(it);
+            storage.save(TaskList);
             return;
         }
     }
