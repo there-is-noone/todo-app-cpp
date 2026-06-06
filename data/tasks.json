@@ -1,11 +1,5 @@
 [
     {
-        "description": "Create something fun for demo  ",
-        "done": false,
-        "id": 8,
-        "priority": "low"
-    },
-    {
         "description": "finish the coloring the posters",
         "done": false,
         "id": 11,
@@ -34,5 +28,11 @@
         "done": false,
         "id": 15,
         "priority": "low"
+    },
+    {
+        "description": "zajęcia szachowe z Michałem",
+        "done": true,
+        "id": 16,
+        "priority": "medium"
     }
 ]
