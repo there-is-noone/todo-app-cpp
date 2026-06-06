@@ -1,21 +1,9 @@
 [
     {
-        "description": "Buy milk",
-        "done": false,
-        "id": 1,
-        "priority": "high"
-    },
-    {
         "description": "Create something fun for demo  ",
         "done": false,
         "id": 8,
         "priority": "low"
-    },
-    {
-        "description": "create",
-        "done": true,
-        "id": 10,
-        "priority": "medium"
     },
     {
         "description": "finish the coloring the posters",
@@ -28,5 +16,23 @@
         "done": false,
         "id": 12,
         "priority": "high"
+    },
+    {
+        "description": "figure out how to save a Trie to a file so I don't have to rebuild it every time i enter the program python",
+        "done": false,
+        "id": 13,
+        "priority": "medium"
+    },
+    {
+        "description": "Moving windows on the main website focus",
+        "done": false,
+        "id": 14,
+        "priority": "medium"
+    },
+    {
+        "description": "expandable list of all of the members/management??? website focus",
+        "done": false,
+        "id": 15,
+        "priority": "low"
     }
 ]

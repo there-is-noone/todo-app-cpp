@@ -1,6 +1,5 @@
 #include "App.hpp"
 #include <iostream>
-#include <limits>
 #include "colors.hpp"
 
 void App::run(int argc, char* argv[]) {
@@ -13,7 +12,7 @@ void App::run(int argc, char* argv[]) {
         printHelp(argc,argv);
     }
     else if (command=="--list" || command=="-l") {
-        handleList();
+        handleList(argc,argv);
     }
     else if (command=="--add" || command=="-a") {
         handleAdd(argc,argv);
@@ -57,10 +56,11 @@ void App::printHelp(int argc,char* argv[]) const {
         "  -d, --done      Mark task as done\n"
         "  -e, --edit      Edit the priority of a task\n\n"
         "More help:\n"
-        "  ./todo -h add\n"
-        "  ./todo -h remove\n"
-        "  ./todo -h list\n"
-        "  ./todo -h done\n";
+        "  ./todo -h [add | a]\n"
+        "  ./todo -h [remove | r] \n"
+        "  ./todo -h [list | l]\n"
+        "  ./todo -h [done | d]\n"
+        "  ./todo -h [edit | e]\n\n";
     }
     else {
         std::string command=argv[2];
@@ -168,9 +168,31 @@ void App::handleAdd(int argc, char* argv[]) {
     std::cout << GREEN "✅ Task added: " RESET << description << "\n";
 }
 
-void App::handleList() {
+void App::handleList(int argc,char* argv[]) {
+    Task::Priority priorityFilter = Task::Priority::HIGH;
+    bool showPending = false;
+    bool showDone = false;
+    bool filterByPriority = false;
+
+    for (int i = 2; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "--pending" || arg == "-p") {
+            showPending = true;
+        } else if (arg == "--done" || arg == "-d") {
+            showDone = true;
+        } else if (arg == "--high") {
+            priorityFilter = Task::Priority::HIGH;
+            filterByPriority = true;
+        } else if (arg == "--medium") {
+            priorityFilter = Task::Priority::MEDIUM;
+            filterByPriority = true;
+        } else if (arg == "--low") {
+            priorityFilter = Task::Priority::LOW;
+            filterByPriority = true;
+        }
+    }
     std::cout << "\n";
-    std::cout << todo.showAllTasks();
+    std::cout << todo.showAllTasks(showPending, showDone, filterByPriority, priorityFilter) << std::endl;
     std::cout << "\n";
 }
 

@@ -9,7 +9,7 @@ public:
     private:
     void printDefault() const;
     void printHelp(int argc,char* argv[]) const;
-    void handleList();
+    void handleList(int argc, char* argv[]);
     void handleEdit(int argc, char* argv[]);
     void handleAdd(int argc, char* argv[]);
     void handleRemove(int argc, char* argv[]);

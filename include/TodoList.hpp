@@ -21,7 +21,7 @@ public:
     void addTask(const std::string& description, Task::Priority priority);
     void removeTask(int Id);
     void editTaskPriority(int id, Task::Priority priority);
-    std::string showAllTasks();
+    std::string showAllTasks(bool showPending,bool showDone,bool filterByPriority,Task::Priority priorityFilter);
 
     int getNextId();
 
