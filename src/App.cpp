@@ -96,14 +96,20 @@ void App::printHelp(int argc,char* argv[]) const {
         }
         else if (command == "list" || command =="l") {
             std::cout <<
-                "LIST COMMAND\n"
-                "Usage:\n"
-                "./todo -l\n\n"
-                "Description:\n"
-                "Displays all tasks in the todo list.\n\n"
-                "Example:\n"
-                "./todo -l\n";
-        }
+               "LIST COMMAND\n"
+               "Usage:\n"
+               "./todo -l                    Show all tasks\n"
+               "./todo -l --pending (-p)     Show only incomplete tasks\n"
+               "./todo -l --done (-d)        Show only completed tasks\n"
+               "./todo -l --high             Show only HIGH priority\n"
+               "./todo -l --medium           Show only MEDIUM priority\n"
+               "./todo -l --low              Show only LOW priority\n\n"
+               "Combine filters:\n"
+               "./todo -l -p --high          Show HIGH priority tasks that are TODO\n\n"
+               "Examples:\n"
+               "./todo -l\n"
+               "./todo -l --pending\n"
+               "./todo -l --high --pending\n";       }
         else if (command == "done" || command == "d") {
             std::cout <<
                 "DONE COMMAND\n"
