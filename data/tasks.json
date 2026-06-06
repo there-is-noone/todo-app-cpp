@@ -1,7 +1,32 @@
 [
     {
-        "description": "finisht the project for the monday",
+        "description": "Buy milk",
         "done": false,
-        "priority": 1,
-        "id": 1
-    }]
+        "id": 1,
+        "priority": "high"
+    },
+    {
+        "description": "Create something fun for demo  ",
+        "done": false,
+        "id": 8,
+        "priority": "low"
+    },
+    {
+        "description": "create",
+        "done": true,
+        "id": 10,
+        "priority": "medium"
+    },
+    {
+        "description": "finish the coloring the posters",
+        "done": false,
+        "id": 11,
+        "priority": "medium"
+    },
+    {
+        "description": "Nauka na kolokwium",
+        "done": false,
+        "id": 12,
+        "priority": "high"
+    }
+]

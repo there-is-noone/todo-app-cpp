@@ -2,6 +2,7 @@
 #include <vector>
 #include "Task.hpp"
 #include "Storage.hpp"
+
 class TodoList{
 public:
     TodoList(Storage& storage): storage(storage), nextId(1) {
@@ -18,8 +19,8 @@ public:
     Task* findById(int id);
     void markTaskDone(int Id);
     void addTask(const std::string& description, Task::Priority priority);
-     void removeTask(Task* task);
     void removeTask(int Id);
+    void editTaskPriority(int id, Task::Priority priority);
     std::string showAllTasks();
 
     int getNextId();

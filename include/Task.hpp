@@ -6,11 +6,9 @@ class Task {
 public:
     enum class Priority { LOW, MEDIUM, HIGH };
     Priority priority_;
-    static Priority parsePriority(const std::string& input) {
-        if (input == "high") return Priority::HIGH;
-        if (input == "medium") return Priority::MEDIUM;
-        return Priority::LOW;
-    }
+    static Priority parsePriority(const std::string& input);
+    static std::string priorityToString(Priority p);
+
     Task(int id, const std::string& description, Priority p, bool done=false);
 
     int getId() const;
@@ -21,7 +19,7 @@ public:
     void setDone(bool is_done=true);
     void setDescription(const std::string& description);
     void setId(int id);
-
+    void setPriority(Priority p);
 
     Task(const Task& other)=default;
     Task(Task&& other) noexcept =default;

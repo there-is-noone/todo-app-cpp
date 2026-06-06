@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef JSONSTORAGE_CPP
+#define JSONSTORAGE_CPP
 #include <vector>
 #include "JsonStorage.hpp"
 #include "Task.hpp"
@@ -22,7 +22,7 @@ std::vector<Task> JsonStorage::load() {
         tasks.emplace_back(Task(
             i["id"],
             i["description"],
-            i["priority"],
+            Task::parsePriority(i["priority"].get<std::string>()),
             i["done"]));
     }
     return tasks;
@@ -35,7 +35,7 @@ void JsonStorage::save(const std::vector<Task>& Tasks) {
         j.push_back({
             {"id",Task.getId()},
             {"description", Task.getDescription()},
-                {"priority"}, Task.getPriority(),
+                {"priority", Task::priorityToString(Task.getPriority())},
             {"done",Task.isDone()}
         });
     }
@@ -43,3 +43,5 @@ void JsonStorage::save(const std::vector<Task>& Tasks) {
 }
 
 JsonStorage::~JsonStorage() =default;
+
+#endif //JSONSTORAGE_CPP
