@@ -48,7 +48,7 @@ void App::printHelp(int argc,char* argv[]) const {
         std::cout <<
         "Todo CLI - Help\n\n"
         "Usage:\n"
-        "  ./todo [command] [options]\n\n"
+        "  todo [command] [options]\n\n"
         "Commands:\n"
         "  -a, --add       Add a new task\n"
         "  -l, --list      Show all tasks\n"
@@ -56,11 +56,11 @@ void App::printHelp(int argc,char* argv[]) const {
         "  -d, --done      Mark task as done\n"
         "  -e, --edit      Edit the priority of a task\n\n"
         "More help:\n"
-        "  ./todo -h [add | a]\n"
-        "  ./todo -h [remove | r] \n"
-        "  ./todo -h [list | l]\n"
-        "  ./todo -h [done | d]\n"
-        "  ./todo -h [edit | e]\n\n";
+        "  todo -h [add | a]\n"
+        "  todo -h [remove | r] \n"
+        "  todo -h [list | l]\n"
+        "  todo -h [done | d]\n"
+        "  todo -h [edit | e]\n\n";
     }
     else {
         std::string command=argv[2];
@@ -68,7 +68,7 @@ void App::printHelp(int argc,char* argv[]) const {
             std::cout<<
                 "ADD COMMAND\n"
 "Usage:\n"
-"./todo -a [description] [priority]\n\n"
+"todo -a [description] [priority]\n\n"
 "Description:\n"
 "Adds a new task to the todo list.\n\n"
 "Arguments:\n"
@@ -76,8 +76,8 @@ void App::printHelp(int argc,char* argv[]) const {
 "priority      Optional: low, medium, high (default: low)\n"
 
 "Examples:\n"
-"./todo -a \"Buy milk\"\n"
-"./todo -a \"Finish project\" high\n\n"
+"todo -a \"Buy milk\"\n"
+"todo -a \"Finish project\" high\n\n"
 "Interactive mode:\n"
 "If no description is provided, the program will prompt you\n"
 "to enter description and priority step-by-step.\n";
@@ -86,58 +86,58 @@ void App::printHelp(int argc,char* argv[]) const {
             std::cout <<
                 "REMOVE COMMAND\n"
                 "Usage:\n"
-                "./todo -r <id>\n\n"
+                "todo -r <id>\n\n"
                 "Description:\n"
                 "Removes a task by its ID.\n\n"
                 "Arguments:\n"
                 "id    The ID of the task to remove\n\n"
                 "Example:\n"
-                "./todo -r 3\n";
+                "todo -r 3\n";
         }
         else if (command == "list" || command =="l") {
             std::cout <<
                "LIST COMMAND\n"
                "Usage:\n"
-               "./todo -l                    Show all tasks\n"
-               "./todo -l --pending (-p)     Show only incomplete tasks\n"
-               "./todo -l --done (-d)        Show only completed tasks\n"
-               "./todo -l --high             Show only HIGH priority\n"
-               "./todo -l --medium           Show only MEDIUM priority\n"
-               "./todo -l --low              Show only LOW priority\n\n"
+               "todo -l                    Show all tasks\n"
+               "todo -l --pending (-p)     Show only incomplete tasks\n"
+               "todo -l --done (-d)        Show only completed tasks\n"
+               "todo -l --high             Show only HIGH priority\n"
+               "todo -l --medium           Show only MEDIUM priority\n"
+               "todo -l --low              Show only LOW priority\n\n"
                "Combine filters:\n"
-               "./todo -l -p --high          Show HIGH priority tasks that are TODO\n\n"
+               "todo -l -p --high          Show HIGH priority tasks that are TODO\n\n"
                "Examples:\n"
-               "./todo -l\n"
-               "./todo -l --pending\n"
-               "./todo -l --high --pending\n";       }
+               "todo -l\n"
+               "todo -l --pending\n"
+               "todo -l --high --pending\n";       }
         else if (command == "done" || command == "d") {
             std::cout <<
                 "DONE COMMAND\n"
                 "Usage:\n"
-                "./todo -d <id>\n\n"
+                "todo -d <id>\n\n"
                 "Description:\n"
                 "Marks a task as completed.\n\n"
                 "Arguments:\n"
                 "id    The ID of the task to mark as done\n\n"
                 "Example:\n"
-                "./todo -d 2\n";
+                "todo -d 2\n";
         }
         else if (command=="edit" || command=="e") {
             std::cout <<
     "EDIT COMMAND\n"
     "Usage:\n"
-    "./todo -e <id> <priority>\n\n"
+    "todo -e <id> <priority>\n\n"
     "Description:\n"
     "Changes the priority of an existing task.\n\n"
     "Arguments:\n"
     "id        The ID of the task to edit\n"
     "priority  New priority: low, medium, high\n\n"
     "Example:\n"
-    "./todo -e 3 high\n";
+    "todo -e 3 high\n";
         }
         else {
             std::cout << "Unknown help topic. Use:\n";
-            std::cout << "./todo -h add|remove|list|done\n";
+            std::cout << "todo -h add|remove|list|done\n";
         }
     }
     }
@@ -248,7 +248,7 @@ void App::handleRemove(int argc, char* argv[]) {
 
 void App::handleEdit(int argc, char* argv[]) {
     if (argc < 4) {
-        std::cout << RED "❌ Usage: ./todo -e <id> <priority>\n" RESET;
+        std::cout << RED "❌ Usage: todo -e <id> <priority>\n" RESET;
         return;
     }
     int id;

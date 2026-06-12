@@ -16,8 +16,10 @@ Task* TodoList::findById(int Id) {
 
 void TodoList::markTaskDone(int Id) {
     Task* task= findById(Id);
+    if (!task -> isDone())
+        task->setDone(true);
+    else task ->setDone(false);
 
-    task->setDone();
     storage.save(TaskList);
 }
 void TodoList::addTask(const std::string& description,Task::Priority priority){

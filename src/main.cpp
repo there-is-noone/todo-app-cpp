@@ -7,7 +7,7 @@
 
 
 int main(int argc, char* argv[]) {
-    JsonStorage storage("data/tasks.json");
+    JsonStorage storage("/data/tasks.json");
     TodoList todo(storage);
 
     App app(todo);

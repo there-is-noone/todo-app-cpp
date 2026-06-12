@@ -24,7 +24,7 @@ cmake .. && cmake --build .
 ### Install Globally
 
 ```bash
-sudo cp cmake-build-debug/todo /usr/local/bin/todo
+sudo cp todo /usr/local/bin/todo
 ```
 
 Now run from anywhere:
@@ -41,12 +41,12 @@ todo -h
 
 #### Add a task
 ```bash
-./todo -a "Buy groceries"              # Default: LOW priority
-./todo -a "Finish project" high        # HIGH priority
-./todo -a "Read a book" medium         # MEDIUM priority
+todo -a "Buy groceries"              # Default: LOW priority
+todo -a "Finish project" high        # HIGH priority
+todo -a "Read a book" medium         # MEDIUM priority
  
 # Interactive mode (no arguments)
-./todo -a
+todo -a
 # Prompts:
 # Enter description: Study for exam
 # Enter priority (low/medium/high): medium
@@ -54,34 +54,34 @@ todo -h
 
 #### List tasks
 ```bash
-./todo -l                   # Show all tasks
-./todo -l --pending (-p)    # Show only incomplete tasks
-./todo -l --done (-d)       # Show only completed tasks
-./todo -l --high            # Show only HIGH priority tasks
-./todo -l --medium          # Show only MEDIUM priority tasks
-./todo -l --low             # Show only LOW priority tasks
+todo -l                   # Show all tasks
+todo -l --pending (-p)    # Show only incomplete tasks
+todo -l --done (-d)       # Show only completed tasks
+todo -l --high            # Show only HIGH priority tasks
+todo -l --medium          # Show only MEDIUM priority tasks
+todo -l --low             # Show only LOW priority tasks
  
 # Combine filters
-./todo -l --high --pending  # HIGH priority tasks that are TODO
-./todo -l --medium --done   # MEDIUM priority tasks that are DONE
+todo -l --high --pending  # HIGH priority tasks that are TODO
+todo -l --medium --done   # MEDIUM priority tasks that are DONE
 ```
 
 #### Mark task as done
 ```bash
-./todo -d 1                 # Mark task #1 as done
-./todo --done 3             # Mark task #3 as done
+todo -d 1                 # Mark task #1 as done
+todo --done 3             # Mark task #3 as done
 ```
 
 #### Edit task priority
 ```bash
-./todo -e 2 high            # Change task #2 to HIGH priority
-./todo --edit 5 low         # Change task #5 to LOW priority
+todo -e 2 high            # Change task #2 to HIGH priority
+todo --edit 5 low         # Change task #5 to LOW priority
 ```
 
 #### Remove a task
 ```bash
-./todo -r 1                 # Delete task #1
-./todo --remove 3           # Delete task #3
+todo -r 1                 # Delete task #1
+todo --remove 3           # Delete task #3
 ```
 ---
 ## Data Storage
