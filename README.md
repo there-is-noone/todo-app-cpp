@@ -1,6 +1,6 @@
 # Todo CLI App
 
-A lightweight command-line todo list application in modern C++. Manage tasks by priority with persistent JSON storage.
+A lightweight Linux command-line todo list application in modern C++. Manage tasks by priority with persistent JSON storage.
 
 ## Features
 
@@ -86,7 +86,7 @@ todo --remove 3           # Delete task #3
 ---
 ## Data Storage
 
-Tasks saved to `data/tasks.json`:
+Tasks saved to `./.local/share/todo-app/tasks.json`:
 ```json
 [
   {"id": 1, "description": "Study", "priority": "high", "done": false},
@@ -112,27 +112,33 @@ Tasks saved to `data/tasks.json`:
 
 - C++17+
 - CMake 3.10+ (or Makefile alternative)
-- Linux/macOS/Windows
 
 ## Build Without CMake
 
 Create `Makefile`:
 ```makefile
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall
-SOURCES = src/main.cpp src/App.cpp src/TodoList.cpp src/Task.cpp src/JsonStorage.cpp src/Storage.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
+CXXFLAGS = -std=c++17 -Wall -Iinclude -Iexternal
+
+SOURCES := $(wildcard src/*.cpp)
+OBJECTS := $(SOURCES:.cpp=.o)
+
 TARGET = todo
 
 all: $(TARGET)
+
 $(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS) -Iinclude
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@ -Iinclude
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+src/%.o: src/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
 	rm -f $(OBJECTS) $(TARGET)
+
 install: $(TARGET)
 	sudo cp $(TARGET) /usr/local/bin/
+
 .PHONY: all clean install
 ```
 
@@ -182,8 +188,6 @@ todo-app/
 │   ├── Task.hpp
 │   ├── JsonStorage.hpp
 │   └── Storage.hpp
-├── data/
-│   └── tasks.json        # Task database (auto-created)
 ├── external/
 │   └── json.hpp          # nlohmann/json library
 ├── CMakeLists.txt
@@ -201,25 +205,20 @@ todo-app/
 ---
 ## Getting Help
 
-- **First time using the app?** Run `./todo --help` for interactive guide
-- **Forgot a command?** Try `./todo -h add` (or any command name)
-- **Issues?** Check that the `data/` directory exists and is writable
-- **Lost data?** Check `data/tasks.json` - it's just plain JSON!
+- **First time using the app?** Run `todo --help` for interactive guide
+- **Forgot a command?** Try `todo -h add` (or any command name)
+- **Issues?** Check that the `~/.local/share/todo-app/` directory exists and is writable
+- **Lost data?** Check `~/.local/share/todo-app/tasks.json` - it's just plain JSON!
 
 
 
 ## University Assignment
 
-✅ Presented to class  
-✅ External library integration (nlohmann/json)  
-✅ Complete, coherent implementation  
-✅ Comprehensive documentation  
-✅ GitHub repository
-
-
+- Presented to 30 people
+- Started as a personal project, available for everybody to utilize and enjoy
 
 ---
 
 **Ready to use. A clean CLI todo app.** 🚀
 
-Last updated: 6.06.2026
+Last updated: 13.06.2026

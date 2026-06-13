@@ -9,23 +9,52 @@
 #include "json.hpp"
 #include <iostream>
 
-using json=nlohmann::json;
-
-JsonStorage::JsonStorage(const std::string& name) {
-    std::string home;
-
 #ifdef _WIN32
-    char* userProfile = std::getenv("USERPROFILE");
-    home = userProfile ? userProfile : "";
-#else
-    char* homeDir = std::getenv("HOME");
-    home = homeDir ? homeDir : "";
+#include <windows.h>
+#elif __linux__
+#include <unistd.h>
+#elif __APPLE__
+#include <mach-o/dyld.h>
 #endif
 
-    FileName = home + "/.todo-app/tasks.json";
+std::filesystem::path getExecutablePath() {
+#ifdef _WIN32
+    char buffer[MAX_PATH];
+    GetModuleFileNameA(NULL, buffer, MAX_PATH);
+    return std::filesystem::path(buffer);
 
-    std::filesystem::path path(FileName);
-    std::filesystem::create_directories(path.parent_path());
+#elif __linux__
+    char buffer[1024];
+    ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+    if (len != -1) {
+        buffer[len] = '\0';
+        return std::filesystem::path(buffer);
+    }
+    throw std::runtime_error("Cannot get executable path");
+
+#elif __APPLE__
+    char buffer[1024];
+    uint32_t size = sizeof(buffer);
+    if (_NSGetExecutablePath(buffer, &size) == 0) {
+        return std::filesystem::path(buffer);
+    }
+    throw std::runtime_error("Cannot get executable path");
+
+#else
+    throw std::runtime_error("Unsupported platform");
+#endif
+}
+
+using json=nlohmann::json;
+JsonStorage::JsonStorage(const std::string& name) {
+    const char* home = std::getenv("HOME");
+
+    std::filesystem::path baseDir =
+        std::string(home ? home : "") + "/.local/share/todo-app";
+
+    std::filesystem::create_directories(baseDir);
+
+    FileName = (baseDir / "tasks.json").string();
 
     std::cout << "Using file: " << FileName << std::endl;
 }
