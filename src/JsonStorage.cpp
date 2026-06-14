@@ -8,35 +8,53 @@
 #include <cstdlib>
 #include "json.hpp"
 #include <iostream>
-
-#ifdef _WIN32
-#include <windows.h>
-#elif __linux__
 #include <unistd.h>
-#elif __APPLE__
-#include <mach-o/dyld.h>
-#endif
-
+std::filesystem::path getExecutablePath() {
     char buffer[1024];
+
     ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
-    if (len != -1) {
-        buffer[len] = '\0';
-        return std::filesystem::path(buffer);
+    if (len == -1) {
+        throw std::runtime_error("Cannot get executable path");
     }
-    throw std::runtime_error("Cannot get executable path");
+
+    buffer[len] = '\0';
+    return std::filesystem::path(buffer);
+}
 
 
 using json=nlohmann::json;
 JsonStorage::JsonStorage(const std::string& name) {
-    const char* home = std::getenv("HOME");
+    std::filesystem::path baseDir;
 
-    std::filesystem::path baseDir =
-        std::string(home ? home : "") + "/.local/share/todo-app";
+    try {
+        auto exePath = getExecutablePath();
+        auto exeDir = exePath.parent_path();
+        auto dataDir = exeDir / "data";
 
-    std::filesystem::create_directories(baseDir);
+        std::filesystem::create_directories(dataDir);
+
+        auto testFile = dataDir / "test.tmp";
+        std::ofstream test(testFile);
+        if (test) {
+            test.close();
+            std::filesystem::remove(testFile);
+
+            baseDir = dataDir;
+        } else {
+            throw std::runtime_error("Cannot write to exe directory");
+        }
+
+    } catch (...) {
+        const char* home = std::getenv("HOME");
+        if (!home) {
+            throw std::runtime_error("Cannot determine HOME directory");
+        }
+
+        baseDir = std::filesystem::path(home) / ".local/share/todo-app";
+        std::filesystem::create_directories(baseDir);
+    }
 
     FileName = (baseDir / "tasks.json").string();
-
     std::cout << "Using file: " << FileName << std::endl;
 }
 
