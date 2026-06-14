@@ -17,13 +17,6 @@
 #include <mach-o/dyld.h>
 #endif
 
-std::filesystem::path getExecutablePath() {
-#ifdef _WIN32
-    char buffer[MAX_PATH];
-    GetModuleFileNameA(NULL, buffer, MAX_PATH);
-    return std::filesystem::path(buffer);
-
-#elif __linux__
     char buffer[1024];
     ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
     if (len != -1) {
@@ -32,18 +25,6 @@ std::filesystem::path getExecutablePath() {
     }
     throw std::runtime_error("Cannot get executable path");
 
-#elif __APPLE__
-    char buffer[1024];
-    uint32_t size = sizeof(buffer);
-    if (_NSGetExecutablePath(buffer, &size) == 0) {
-        return std::filesystem::path(buffer);
-    }
-    throw std::runtime_error("Cannot get executable path");
-
-#else
-    throw std::runtime_error("Unsupported platform");
-#endif
-}
 
 using json=nlohmann::json;
 JsonStorage::JsonStorage(const std::string& name) {
