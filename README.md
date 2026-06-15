@@ -18,13 +18,7 @@ A lightweight Linux command-line todo list application in modern C++. Manage tas
 git clone https://github.com/yourusername/todo-app.git
 cd todo-app
 mkdir -p cmake-build-debug && cd cmake-build-debug
-cmake .. && cmake --build .
-```
-
-### Install Globally
-
-```bash
-sudo cp todo /usr/local/bin/todo
+cmake .. && sudo make install
 ```
 
 Now run from anywhere:

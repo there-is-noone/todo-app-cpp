@@ -1,5 +1,4 @@
-#ifndef JSONSTORAGE_CPP
-#define JSONSTORAGE_CPP
+
 #include <vector>
 #include "JsonStorage.hpp"
 #include "Task.hpp"
@@ -55,7 +54,6 @@ JsonStorage::JsonStorage(const std::string& name) {
     }
 
     FileName = (baseDir / "tasks.json").string();
-    std::cout << "Using file: " << FileName << std::endl;
 }
 
 std::vector<Task> JsonStorage::load() {
@@ -110,5 +108,3 @@ void JsonStorage::save(const std::vector<Task>& Tasks) {
 }
 
 JsonStorage::~JsonStorage() =default;
-
-#endif //JSONSTORAGE_CPP
