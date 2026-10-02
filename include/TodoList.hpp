@@ -22,6 +22,7 @@ public:
     void removeTask(int Id);
     void editTaskPriority(int id, Task::Priority priority);
     std::string showAllTasks(bool showPending,bool showDone,bool filterByPriority,Task::Priority priorityFilter);
+    std::vector<Task> pendingTasks(Task::Priority priority) const;
 
     int getNextId();
 
