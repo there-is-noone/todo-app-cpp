@@ -1,6 +1,14 @@
 #include "App.hpp"
 #include <iostream>
+#include <fstream>
+#include <filesystem>
+#include <cstdlib>
+#include <ctime>
+#include <spawn.h>
+#include <sys/wait.h>
 #include "colors.hpp"
+
+extern char** environ;
 
 void App::run(int argc, char* argv[]) {
     if (argc<2) {
@@ -34,6 +42,9 @@ void App::run(int argc, char* argv[]) {
     else if (command=="--edit" || command=="-e") {
         handleEdit(argc,argv);
     }
+    else if (command=="--notify" || command=="-n") {
+        handleNotify(argc,argv);
+    }
     else {
         printDefault();
     }
@@ -54,13 +65,15 @@ void App::printHelp(int argc,char* argv[]) const {
         "  -l, --list      Show all tasks\n"
         "  -r, --remove    Remove a task\n"
         "  -d, --done      Mark task as done\n"
-        "  -e, --edit      Edit the priority of a task\n\n"
+        "  -e, --edit      Edit the priority of a task\n"
+        "  -n, --notify    Popup with HIGH priority tasks (once a day)\n\n"
         "More help:\n"
         "  todo -h [add | a]\n"
         "  todo -h [remove | r] \n"
         "  todo -h [list | l]\n"
         "  todo -h [done | d]\n"
-        "  todo -h [edit | e]\n\n";
+        "  todo -h [edit | e]\n"
+        "  todo -h [notify | n]\n\n";
     }
     else {
         std::string command=argv[2];
@@ -135,9 +148,23 @@ void App::printHelp(int argc,char* argv[]) const {
     "Example:\n"
     "todo -e 3 high\n";
         }
+        else if (command=="notify" || command=="n") {
+            std::cout <<
+    "NOTIFY COMMAND\n"
+    "Usage:\n"
+    "todo -n [--force]\n\n"
+    "Description:\n"
+    "Shows a desktop popup listing all pending HIGH priority tasks.\n"
+    "Only the first call of each day shows the popup, so it is safe\n"
+    "to run on every login / screen unlock.\n\n"
+    "Options:\n"
+    "--force, -f   Show the popup even if it was already shown today\n\n"
+    "Example:\n"
+    "todo -n\n";
+        }
         else {
             std::cout << "Unknown help topic. Use:\n";
-            std::cout << "todo -h add|remove|list|done\n";
+            std::cout << "todo -h add|remove|list|done|edit|notify\n";
         }
     }
     }
@@ -279,4 +306,72 @@ void App::handleEdit(int argc, char* argv[]) {
     todo.editTaskPriority(id, newPriority);
     std::cout << GREEN "✅ Task " << id << " priority updated to " RESET
               << YELLOW << priorityStr << RESET << "\n";
+}
+
+static std::filesystem::path notifyStampPath() {
+    std::filesystem::path stateDir;
+    if (const char* xdg = std::getenv("XDG_STATE_HOME"); xdg && *xdg) {
+        stateDir = xdg;
+    } else if (const char* home = std::getenv("HOME")) {
+        stateDir = std::filesystem::path(home) / ".local/state";
+    } else {
+        throw std::runtime_error("Cannot determine HOME directory");
+    }
+    return stateDir / "todo-app" / "last-notify";
+}
+
+static std::string today() {
+    std::time_t now = std::time(nullptr);
+    char buffer[11];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", std::localtime(&now));
+    return buffer;
+}
+
+void App::handleNotify(int argc, char* argv[]) {
+    bool force = false;
+    for (int i = 2; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "--force" || arg == "-f") force = true;
+    }
+
+    auto stampPath = notifyStampPath();
+    std::string date = today();
+    if (!force) {
+        std::ifstream stamp(stampPath);
+        std::string lastDate;
+        if (stamp >> lastDate && lastDate == date) {
+            return;
+        }
+    }
+
+    std::vector<Task> tasks = todo.pendingTasks(Task::Priority::HIGH);
+    if (!tasks.empty()) {
+        std::string title = "🔥 " + std::to_string(tasks.size()) + " high priority task"
+                            + (tasks.size() == 1 ? "" : "s") + " for today";
+        std::string body;
+        for (const auto& task : tasks) {
+            if (!body.empty()) body += "\n";
+            body += "• #" + std::to_string(task.getId()) + " " + task.getDescription();
+        }
+
+        // Spawn notify-send directly (no shell) so task text is never interpreted as a command.
+        // Critical urgency keeps the popup on screen until it is dismissed.
+        const char* args[] = {"notify-send", "--app-name=Todo", "--urgency=critical",
+                              "--icon=view-task", title.c_str(), body.c_str(), nullptr};
+        pid_t pid;
+        if (posix_spawnp(&pid, "notify-send", nullptr, nullptr,
+                         const_cast<char* const*>(args), environ) != 0) {
+            std::cout << RED "❌ Could not run notify-send (is libnotify installed?)\n" RESET;
+            return;
+        }
+        int status = 0;
+        waitpid(pid, &status, 0);
+        if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
+            std::cout << RED "❌ notify-send failed\n" RESET;
+            return;
+        }
+    }
+
+    std::filesystem::create_directories(stampPath.parent_path());
+    std::ofstream(stampPath) << date << "\n";
 }

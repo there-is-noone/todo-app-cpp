@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Runs `todo --notify` on login, on screen unlock and on resume from suspend.
+# `todo --notify` itself only shows the popup once per day.
+
+notify() { todo --notify; }
+
+# Login
+notify
+
+# Screen unlock (GNOME)
+gdbus monitor --session --dest org.gnome.ScreenSaver --object-path /org/gnome/ScreenSaver |
+while read -r line; do
+    [[ $line == *"ActiveChanged (false,)"* ]] && notify
+done &
+
+# Resume from suspend, for when no lock screen is shown.
+# If the screen is still locked, the unlock handler above takes care of it.
+gdbus monitor --system --dest org.freedesktop.login1 --object-path /org/freedesktop/login1 |
+while read -r line; do
+    if [[ $line == *"PrepareForSleep (false,)"* ]]; then
+        sleep 3
+        locked=$(gdbus call --session --dest org.gnome.ScreenSaver --object-path /org/gnome/ScreenSaver \
+                 --method org.gnome.ScreenSaver.GetActive 2>/dev/null)
+        [[ $locked == "(true,)" ]] || notify
+    fi
+done &
+
+wait

@@ -77,6 +77,22 @@ todo --edit 5 low         # Change task #5 to LOW priority
 todo -r 1                 # Delete task #1
 todo --remove 3           # Delete task #3
 ```
+#### Daily popup with HIGH priority tasks
+```bash
+todo -n                   # Desktop popup listing pending HIGH priority tasks
+todo --notify --force     # Show it even if it was already shown today
+```
+`todo -n` only shows the popup the first time it runs each day (the date is kept in
+`~/.local/state/todo-app/last-notify`).
+
+To get it automatically the first time you log in / unlock / open the laptop each day,
+enable the bundled user service (installed by `sudo make install`):
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now todo-notify.service
+```
+It runs `todo -n` on login, screen unlock and resume from suspend (GNOME, needs `notify-send` and `gdbus`).
+
 ---
 ## Data Storage
 

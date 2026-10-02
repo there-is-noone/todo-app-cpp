@@ -118,6 +118,16 @@ void TodoList::editTaskPriority(int id, Task::Priority priority) {
 }
 
 
+std::vector<Task> TodoList::pendingTasks(Task::Priority priority) const {
+    std::vector<Task> result;
+    for (const auto& task : TaskList) {
+        if (!task.isDone() && task.getPriority() == priority) {
+            result.push_back(task);
+        }
+    }
+    return result;
+}
+
 int TodoList::getNextId() {
     return nextId++;
 }
